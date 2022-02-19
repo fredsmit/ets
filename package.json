@@ -1,5 +1,5 @@
 {
-  "name": "electron-quick-start-typescript",
+  "name": "ets",
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
   "scripts": {
@@ -8,7 +8,10 @@
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "npm run build && electron ./dist/main.js"
   },
-  "repository": "https://github.com/electron/electron-quick-start-typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron/electron-quick-start-typescript.git"
+  },
   "keywords": [
     "Electron",
     "quick",
@@ -26,5 +29,9 @@
     "eslint": "^7.32.0",
     "typescript": "^4.5.5"
   },
-  "dependencies": {}
+  "bugs": {
+    "url": "https://github.com/electron/electron-quick-start-typescript/issues"
+  },
+  "homepage": "https://github.com/electron/electron-quick-start-typescript#readme",
+  "main": "index.js"
 }
