@@ -5,11 +5,14 @@ function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
+    width: 800,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
-    width: 800,
   });
+
+// __dirname: C:\Users\Alfredas\ets\dist
+// __filename: C:\Users\Alfredas\ets\dist\main.js
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../index.html"));
@@ -42,3 +45,9 @@ app.on("window-all-closed", () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+console.log("__dirname:", __dirname);
+console.log("__filename:", __filename);
+
+export { };
+
