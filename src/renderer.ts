@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // No Node.js APIs are available in this process unless
@@ -10,5 +11,13 @@ function renderer_testUtil(text: string): void {
 }
 
 console.log("KUKU.document:", document);
+
+interface RendererWindow {
+    myAPI: myObjectType
+}
+
+const myObject = (window as typeof window & RendererWindow).myAPI;
+console.log("myObject:", myObject);
+myObject.doAThing("myKUKU");
 
 

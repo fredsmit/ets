@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+// preload with contextIsolation enabled
+import { contextBridge } from 'electron';
+import { myObject } from "./myApi.js";
+
+contextBridge.exposeInMainWorld('myAPI', myObject);
+
+
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev: Event) => {
@@ -42,7 +49,7 @@ window.addEventListener("DOMContentLoaded", (ev: Event) => {
   console.log("process.platform:", process.platform); // win32
   console.log("__dirname:", __dirname);
   console.log("__filename:", __filename);
-  
+
   // for (const entry of Object.entries(process.versions)) {
   //   console.log(entry);
   // }

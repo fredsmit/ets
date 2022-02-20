@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable no-var */
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // No Node.js APIs are available in this process unless
@@ -9,3 +10,6 @@ function renderer_testUtil(text) {
     console.log("renderer_testUtil.text:", text);
 }
 console.log("KUKU.document:", document);
+const myObject = window.myAPI;
+console.log("myObject:", myObject);
+myObject.doAThing("myKUKU");

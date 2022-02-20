@@ -1,6 +1,10 @@
 "use strict";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 Object.defineProperty(exports, "__esModule", { value: true });
+// preload with contextIsolation enabled
+const electron_1 = require("electron");
+const myApi_js_1 = require("./myApi.js");
+electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {
