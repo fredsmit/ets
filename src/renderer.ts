@@ -5,4 +5,10 @@
 // Use preload.js to selectively enable features
 // needed in the renderer process.
 
-// export {};
+function renderer_testUtil(text: string): void {
+    console.log("renderer_testUtil.text:", text);
+}
+
+console.log("KUKU.document:", document);
+
+

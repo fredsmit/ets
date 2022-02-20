@@ -5,4 +5,7 @@
 // nodeIntegration is set to true in webPreferences.
 // Use preload.js to selectively enable features
 // needed in the renderer process.
-// export {};
+function renderer_testUtil(text) {
+    console.log("renderer_testUtil.text:", text);
+}
+console.log("KUKU.document:", document);
