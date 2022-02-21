@@ -6,7 +6,7 @@ const myObject: myObjectType = {
     }
 };
 
-const getCwd: getCurrentWorkingDirectory = process.cwd;
+const getCwd: TgetCurrentWorkingDirectory = process.cwd;
 
 export { myObject, getCwd };
 

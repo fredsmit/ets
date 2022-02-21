@@ -1,5 +1,5 @@
 interface RendererWindow {
-    getCurrentWorkingDirectory: getCurrentWorkingDirectory
+    getCurrentWorkingDirectory: TgetCurrentWorkingDirectory
 }
 
 const getCurrentWorkingDirectory = (window as typeof window & RendererWindow).getCurrentWorkingDirectory;
