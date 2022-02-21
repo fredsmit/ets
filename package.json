@@ -34,7 +34,7 @@
     "url": "https://github.com/electron/electron-quick-start-typescript/issues"
   },
   "homepage": "https://github.com/electron/electron-quick-start-typescript#readme",
-  "main": "index.js",
+  "main": "./win/index.js",
   "dependencies": {
     "asar": "^3.1.0"
   }

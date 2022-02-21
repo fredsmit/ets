@@ -6,6 +6,7 @@ const electron_1 = require("electron");
 const myApi_js_1 = require("./myApi.js");
 electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 electron_1.contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', myApi_js_1.getCwd);
+electron_1.contextBridge.exposeInMainWorld('getNodeConfig', myApi_js_1.getNodeConfig);
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {
@@ -32,9 +33,6 @@ window.addEventListener("DOMContentLoaded", (ev) => {
     //  v8: "9.8.177.9-electron.0"
     //  zlib: "1.2.11"
     //  http_parser: ?
-    // const components: Readonly<Record<keyof NodeJS.ProcessVersions, string>> = {
-    //   "http_parser": ""
-    // };
     for (const electronComponent of ["chrome", "node", "electron"]) {
         replaceText(`${electronComponent}-version`, process.versions[electronComponent]);
     }

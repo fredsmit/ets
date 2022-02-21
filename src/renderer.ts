@@ -12,11 +12,7 @@ function renderer_testUtil(text: string): void {
 
 console.log("KUKU.document:", document);
 
-interface RendererWindow {
-    myAPI: myObjectType
-}
-
-const myObject = (window as typeof window & RendererWindow).myAPI;
+const myObject = (window as typeof window & NodeWindow).myAPI;
 console.log("myObject:", myObject);
 myObject.doAThing("myKUKU");
 

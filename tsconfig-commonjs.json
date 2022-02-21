@@ -24,7 +24,7 @@
       // ],
       //
       //
-      "outDir": ".",
+      "outDir": "./win",
       "baseUrl": ".",
       "paths": {
         "*": [

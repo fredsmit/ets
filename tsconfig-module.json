@@ -23,7 +23,7 @@
     // ],
     //
     //
-    "outDir": ".",
+    "outDir": "./web",
     "baseUrl": ".",
     "paths": {
       "*": [

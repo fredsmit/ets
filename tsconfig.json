@@ -9,7 +9,7 @@
     "sourceMap": false,
     //
     //
-    "module": "commonjs",
+    //"module": "commonjs",
     "moduleResolution": "node",
     //
     //

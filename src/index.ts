@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-//const { app, BrowserWindow } = await import("electron");
-//import { app, BrowserWindow } from "electron";
-
 
 import { app, BrowserWindow } from 'electron';
-//app.setAppPath(appPath || path.dirname(filePath));
-
-
 import * as path from "path";
+
 import { testUtil } from "./utils.js";
 
 // then() will be called when Electron has finished
@@ -16,28 +11,32 @@ import { testUtil } from "./utils.js";
 
 app.whenReady().then((): void => {
 
+  // console.log("__dirname:", __dirname);
+  // console.log("__filename:", __filename);
+  // __dirname: C:\Users\Alfredas\ets\win
+  // __filename C:\Users\Alfredas\ets\win\index.js
+
   async function createWindow() {
 
     testUtil("==> createWindow");
 
-    // Create the browser window.
+    const preloadJsPath = path.join(__dirname, "preload.js");
+    const indexHtmlPath = path.join(__dirname, "../index.html");
+
     const mainWindow = new BrowserWindow({
-      height: 720,
-      width: 840,
+      width: 1200,
+      height: 800,
       webPreferences: {
+        preload: preloadJsPath,
         nodeIntegration: true,
-        preload: path.join(__dirname, "preload.js"),
+        zoomFactor: 150
       },
     });
 
-    // __dirname: C:\Users\Alfredas\ets\dist
-    // __filename: C:\Users\Alfredas\ets\dist\main.js
-
     // and load the index.html of the app.
-    await mainWindow.loadFile(path.join(__dirname, "index.html"));
+    mainWindow.loadFile(indexHtmlPath);
 
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
 
   createWindow();
@@ -62,10 +61,7 @@ app.addListener("window-all-closed", function () {
   }
 });
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-
-console.log("__dirname:", __dirname);
-console.log("__filename:", __filename);
+// In this file you can include the rest of your app"s specific main process code.
+// You can also put them in separate files and require them here.
 
 export { };

@@ -2,10 +2,11 @@
 
 // preload with contextIsolation enabled
 import { contextBridge } from 'electron';
-import { myObject, getCwd } from "./myApi.js";
+import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
+contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
 
 // All of the Node.js APIs are available in the preload process.
@@ -19,7 +20,6 @@ window.addEventListener("DOMContentLoaded", (ev: Event) => {
       element.innerText = text ?? "Unknown";
     }
   }
-
 
   //  ares: "1.17.2"
   //* brotli: "1.0.9"
@@ -37,10 +37,6 @@ window.addEventListener("DOMContentLoaded", (ev: Event) => {
   //  v8: "9.8.177.9-electron.0"
   //  zlib: "1.2.11"
   //  http_parser: ?
-
-  // const components: Readonly<Record<keyof NodeJS.ProcessVersions, string>> = {
-  //   "http_parser": ""
-  // };
 
   for (const electronComponent of ["chrome", "node", "electron"]) {
     replaceText(`${electronComponent}-version`, process.versions[electronComponent as keyof NodeJS.ProcessVersions]);

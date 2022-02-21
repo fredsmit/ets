@@ -4,3 +4,10 @@ type myObjectType = {
 }
 
 type TgetCurrentWorkingDirectory = () => string;
+
+type NodeWindow = {
+    getCurrentWorkingDirectory: TgetCurrentWorkingDirectory;
+    myAPI: myObjectType;
+    getNodeConfig: () => unknown; //Readonly<Record<string, unknown>>;
+}
+
