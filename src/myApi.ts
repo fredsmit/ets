@@ -6,5 +6,7 @@ const myObject: myObjectType = {
     }
 };
 
-export { myObject };
+const getCwd: getCurrentWorkingDirectory = process.cwd;
+
+export { myObject, getCwd };
 

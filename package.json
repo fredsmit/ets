@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
   "scripts": {
-    "build": "npm run build && electron ./web/main.js",
+    "build": "tsc && tsc -p tsconfig-module.json",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "electron ./web/main.js"
+    "start": "electron ./web/main.cjs"
   },
   "repository": {
     "type": "git",

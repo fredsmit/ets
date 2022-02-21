@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { app, BrowserWindow } from "electron";
+//const { app, BrowserWindow } = await import("electron");
+//import { app, BrowserWindow } from "electron";
+
+
+import { app, BrowserWindow } from 'electron';
+//app.setAppPath(appPath || path.dirname(filePath));
+
+
 import * as path from "path";
 import { testUtil } from "./utils.js";
 
@@ -9,7 +16,7 @@ import { testUtil } from "./utils.js";
 
 app.whenReady().then((): void => {
 
-  function createWindow() {
+  async function createWindow() {
 
     testUtil("==> createWindow");
 
@@ -18,6 +25,7 @@ app.whenReady().then((): void => {
       height: 720,
       width: 840,
       webPreferences: {
+        nodeIntegration: true,
         preload: path.join(__dirname, "preload.js"),
       },
     });
@@ -26,10 +34,10 @@ app.whenReady().then((): void => {
     // __filename: C:\Users\Alfredas\ets\dist\main.js
 
     // and load the index.html of the app.
-    mainWindow.loadFile(path.join(__dirname, "../index.html"));
+    await mainWindow.loadFile(path.join(__dirname, "index.html"));
 
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   }
 
   createWindow();

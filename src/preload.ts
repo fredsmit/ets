@@ -2,9 +2,10 @@
 
 // preload with contextIsolation enabled
 import { contextBridge } from 'electron';
-import { myObject } from "./myApi.js";
+import { myObject, getCwd } from "./myApi.js";
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
+contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 
 
 // All of the Node.js APIs are available in the preload process.
