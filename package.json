@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
   "scripts": {
-    "build": "tsc && tsc -p tsconfig-module.json",
+    "build": "tsc -p tsconfig-commonjs.json && tsc -p tsconfig-module.json",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "start": "electron ./web/main.cjs"

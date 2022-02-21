@@ -1,25 +1,26 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "preserveConstEnums": false,
-    "sourceMap": false,
+    // "strict": true,
+    // "alwaysStrict": true,
+    // "strictNullChecks": true,
+    // "noImplicitAny": true,
+    // "noImplicitReturns": true,
+    // "preserveConstEnums": false,
+    // "sourceMap": false,
     //
     //
     "module": "es2020",
-    "moduleResolution": "node",
+    //"moduleResolution": "node",
     //
     //
-    "target": "es2020",
-    "lib": [
-      "es2019",
-      "esnext.weakref",
-      "dom",
-      "dom.iterable"
-    ],
+    //"target": "es2020",
+    // "lib": [
+    //   "es2019",
+    //   "esnext.weakref",
+    //   "dom",
+    //   "dom.iterable"
+    // ],
     //
     //
     "outDir": ".",
@@ -32,7 +33,7 @@
   },
   "include": [
     "src_m/**/*",
-    "types.d.ts"
+    "types/types.d.ts"
   ],
   "exclude": []
 }

@@ -1,0 +1,40 @@
+
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      // "strict": true,
+      // "alwaysStrict": true,
+      // "strictNullChecks": true,
+      // "noImplicitAny": true,
+      // "noImplicitReturns": true,
+      // "preserveConstEnums": false,
+      // "sourceMap": false,
+      //
+      //
+      "module": "commonjs",
+      //"moduleResolution": "node",
+      //
+      //
+      //"target": "es2020",
+      // "lib": [
+      //   "es2019",
+      //   "esnext.weakref",
+      //   "dom",
+      //   "dom.iterable"
+      // ],
+      //
+      //
+      "outDir": ".",
+      "baseUrl": ".",
+      "paths": {
+        "*": [
+          "node_modules/*"
+        ]
+      }
+    },
+    "include": [
+      "src/**/*",
+      "types/types.d.ts"
+    ],
+    "exclude": []
+  }

@@ -32,7 +32,8 @@
   },
   "include": [
     "src/**/*",
-    "types.d.ts"
+    "src_m/**/*",
+    "types/types.d.ts"
   ],
   "exclude": []
 }
