@@ -18,6 +18,10 @@ export type ElectronMainWorldApi = MainWorldApi<"electronApi", ElectronApi>;
 
 declare global {
     interface Window {
-        electronApi: ElectronMainWorldApi["api"];
+        readonly electronApi: ElectronMainWorldApi["api"];
+        readonly testApi?: unknown;
     }
 }
+
+export type IElectronWindow = Pick<Window, MainWorldApiKeys>;
+
