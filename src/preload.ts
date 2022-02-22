@@ -40,6 +40,21 @@ exposeInMainWorld(testMainWorldApi);
 window.addEventListener("DOMContentLoaded", (ev: Event) => {
   console.log("DOMContentLoaded:", ev);
 
+  const dvCounter2 = document.getElementById('dvCounter2');
+  function counterUpdateListener2(_ev: unknown, value: unknown): void {
+    if (dvCounter2 && typeof value === "number") {
+      const oldValue = Number(dvCounter2.innerText) * Math.PI;
+      const newValue = oldValue + value;
+      dvCounter2.innerText = String(newValue);
+    }
+  }
+
+  setTimeout(() => {
+    ipcRenderer.removeListener('update-counter', counterUpdateListener2);
+  }, 10000);
+
+  ipcRenderer.on('update-counter', counterUpdateListener2);
+
   function replaceText(selector: string, text?: string): void {
     const element = document.getElementById(selector);
     if (element) {

@@ -22,12 +22,12 @@ btnOpenFile.addEventListener('click', async function (ev) {
     }
 });
 const dvCounter = queryRequiredElement(document.body, "strong", "dvCounter");
-electronApi.handleCounter((ev, value) => {
+function counterUpdateListener(ev, value) {
     if (typeof value === "number") {
         const oldValue = Number(dvCounter.innerText);
         const newValue = oldValue + value;
         dvCounter.innerText = String(newValue);
-        console.dir(ev);
         //ev.reply('counter-value', newValue);
     }
-});
+}
+electronApi.onUpdateCounter(counterUpdateListener);

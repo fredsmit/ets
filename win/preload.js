@@ -16,7 +16,7 @@ const electronMainWorldApi = {
         loadPreferences: () => electron_1.ipcRenderer.invoke('load-prefs'),
         setTitle: (title) => electron_1.ipcRenderer.send('set-title', title),
         openFile: (...args) => electron_1.ipcRenderer.invoke('dialog:openFile', ...args),
-        handleCounter: (listener) => {
+        onUpdateCounter: (listener) => {
             electron_1.ipcRenderer.on('update-counter', listener);
         }
     }
@@ -31,6 +31,18 @@ exposeInMainWorld(testMainWorldApi);
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {
     console.log("DOMContentLoaded:", ev);
+    const dvCounter2 = document.getElementById('dvCounter2');
+    function counterUpdateListener2(_ev, value) {
+        if (dvCounter2 && typeof value === "number") {
+            const oldValue = Number(dvCounter2.innerText) * Math.PI;
+            const newValue = oldValue + value;
+            dvCounter2.innerText = String(newValue);
+        }
+    }
+    setTimeout(() => {
+        electron_1.ipcRenderer.removeListener('update-counter', counterUpdateListener2);
+    }, 10000);
+    electron_1.ipcRenderer.on('update-counter', counterUpdateListener2);
     function replaceText(selector, text) {
         const element = document.getElementById(selector);
         if (element) {
