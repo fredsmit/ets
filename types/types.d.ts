@@ -10,4 +10,3 @@ type NodeWindow = {
     myAPI: myObjectType;
     getNodeConfig: () => unknown; //Readonly<Record<string, unknown>>;
 }
-

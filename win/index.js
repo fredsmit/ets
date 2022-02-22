@@ -22,7 +22,7 @@ electron_1.app.whenReady().then(() => {
             webPreferences: {
                 preload: preloadJsPath,
                 nodeIntegration: true,
-                zoomFactor: 1.5
+                zoomFactor: 1.50
             },
         });
         // and load the index.html of the app.
@@ -36,6 +36,16 @@ electron_1.app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (electron_1.BrowserWindow.getAllWindows().length === 0)
             createWindow();
+    });
+    electron_1.ipcMain.on('set-title', (ev, ...args) => {
+        //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
+        const webContents = ev.sender;
+        //console.log("webContents.getType():", webContents.getType());
+        const win = electron_1.BrowserWindow.fromWebContents(webContents);
+        if (win) {
+            const [title] = args;
+            win.setTitle(String(title));
+        }
     });
 }).catch((reason) => {
     console.error("Error:", reason);

@@ -7,6 +7,10 @@ const myApi_js_1 = require("./myApi.js");
 electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 electron_1.contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', myApi_js_1.getCwd);
 electron_1.contextBridge.exposeInMainWorld('getNodeConfig', myApi_js_1.getNodeConfig);
+electron_1.contextBridge.exposeInMainWorld('electronAPI', {
+    loadPreferences: () => electron_1.ipcRenderer.invoke('load-prefs'),
+    setTitle: (title) => electron_1.ipcRenderer.send('set-title', title)
+});
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {

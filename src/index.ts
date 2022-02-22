@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from "path";
 
 import { testUtil } from "./utils.js";
@@ -29,7 +29,7 @@ app.whenReady().then((): void => {
       webPreferences: {
         preload: preloadJsPath,
         nodeIntegration: true,
-        zoomFactor: 1.5
+        zoomFactor: 1.50
       },
     });
 
@@ -46,6 +46,20 @@ app.whenReady().then((): void => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+
+  ipcMain.on('set-title', (ev: Electron.IpcMainEvent, ...args: unknown[]) => {
+    //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
+
+    const webContents = ev.sender;
+    //console.log("webContents.getType():", webContents.getType());
+
+
+    const win = BrowserWindow.fromWebContents(webContents);
+    if (win) {
+      const [title] = args;
+      win.setTitle(String(title))
+    }
   });
 
 }).catch((reason: unknown): void => {

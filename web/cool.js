@@ -2,6 +2,8 @@ import { getRequiredHTMLElements } from "./pageUtils.js";
 const nodeWindow = window;
 const getCurrentWorkingDirectory = nodeWindow.getCurrentWorkingDirectory;
 const getNodeConfig = nodeWindow.getNodeConfig;
+//type x = Window["electronAPI"];
+console.log(window.electronAPI);
 // const btnClick = document.getElementById("btnClick");
 // const dvDisplay = document.getElementById("dvDisplay");
 const { btnClick, dvDisplay } = getRequiredHTMLElements("btnClick", "dvDisplay");

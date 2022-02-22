@@ -16,4 +16,7 @@ const myObject = (window as typeof window & NodeWindow).myAPI;
 console.log("myObject:", myObject);
 myObject.doAThing("myKUKU");
 
+console.log(window.electronAPI);
+
+
 

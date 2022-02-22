@@ -33,7 +33,8 @@
   },
   "include": [
     "src_m/**/*",
-    "types/types.d.ts"
+    "types/types.d.ts",
+    //"types/renderer.d.ts"
   ],
   "exclude": []
 }

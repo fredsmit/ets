@@ -1,8 +1,12 @@
 import { getRequiredHTMLElements } from "./pageUtils.js"
+import { } from "../types/renderer";
 
 const nodeWindow = (window as typeof window & NodeWindow);
 const getCurrentWorkingDirectory = nodeWindow.getCurrentWorkingDirectory;
 const getNodeConfig = nodeWindow.getNodeConfig;
+
+//type x = Window["electronAPI"];
+console.log(window.electronAPI);
 
 // const btnClick = document.getElementById("btnClick");
 // const dvDisplay = document.getElementById("dvDisplay");

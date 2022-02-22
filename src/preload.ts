@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 // preload with contextIsolation enabled
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
+contextBridge.exposeInMainWorld('electronAPI', {
+  loadPreferences: () => ipcRenderer.invoke('load-prefs'),
+  setTitle: (title: string) => ipcRenderer.send('set-title', title)
+})
 
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
