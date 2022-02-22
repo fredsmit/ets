@@ -8,10 +8,16 @@ contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
-contextBridge.exposeInMainWorld('electronAPI', {
+import { IElectronAPI } from '../types/renderer';
+
+const electronAPI: IElectronAPI = {
   loadPreferences: () => ipcRenderer.invoke('load-prefs'),
-  setTitle: (title: string) => ipcRenderer.send('set-title', title)
-})
+  setTitle: (title: string) => ipcRenderer.send('set-title', title),
+  openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args)
+};
+
+contextBridge.exposeInMainWorld('electronAPI', electronAPI);
+
 
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.

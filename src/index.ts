@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { IElectronAPI } from "../types/renderer";
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from "path";
 
 import { testUtil } from "./utils.js";
@@ -9,14 +10,14 @@ import { testUtil } from "./utils.js";
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
-app.whenReady().then((): void => {
+app.whenReady().then(async (): Promise<void> => {
 
   // console.log("__dirname:", __dirname);
   // console.log("__filename:", __filename);
   // __dirname: C:\Users\Alfredas\ets\win
   // __filename C:\Users\Alfredas\ets\win\index.js
 
-  async function createWindow() {
+  async function createWindow(): Promise<BrowserWindow> {
 
     testUtil("==> createWindow");
 
@@ -37,9 +38,8 @@ app.whenReady().then((): void => {
     mainWindow.loadFile(indexHtmlPath);
 
     // mainWindow.webContents.openDevTools();
+    return mainWindow;
   }
-
-  createWindow();
 
   app.addListener('activate', function (ev: Event, hasVisibleWindows: boolean): void {
     console.log("ev.type:", ev.type, "hasVisibleWindows:", hasVisibleWindows);
@@ -47,6 +47,9 @@ app.whenReady().then((): void => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
+  const mainWindow = await createWindow();
+
 
   ipcMain.on('set-title', (ev: Electron.IpcMainEvent, ...args: unknown[]) => {
     //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
@@ -62,6 +65,8 @@ app.whenReady().then((): void => {
     }
   });
 
+  ipcMain.handle('dialog:openFile', getHandler(mainWindow));
+
 }).catch((reason: unknown): void => {
   console.error("Error:", reason);
 });
@@ -74,6 +79,32 @@ app.addListener("window-all-closed", function () {
     app.quit();
   }
 });
+
+function getHandler(browserWindow?: BrowserWindow)
+  : (ev: Electron.IpcMainInvokeEvent, ...args: unknown[]) => ReturnType<IElectronAPI["openFile"]> {
+
+  async function handleFileOpen(ev: Electron.IpcMainInvokeEvent, ...args: unknown[])
+    : ReturnType<IElectronAPI["openFile"]> {
+
+    // console.log("ev:", ev);
+    args.forEach(arg => {
+      console.log("arg:", arg, typeof arg);
+    });
+
+    const openDialogOptions: Electron.OpenDialogOptions = {};
+    const openDialog: Promise<Electron.OpenDialogReturnValue> = browserWindow
+      ? dialog.showOpenDialog(browserWindow, openDialogOptions)
+      : dialog.showOpenDialog(openDialogOptions);
+    const { canceled, filePaths } = await openDialog;
+    if (canceled) {
+      return null;
+    } else {
+      return filePaths && filePaths.length > 0 ? filePaths[0] : null;
+    }
+  }
+
+  return handleFileOpen;
+}
 
 // In this file you can include the rest of your app"s specific main process code.
 // You can also put them in separate files and require them here.

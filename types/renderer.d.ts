@@ -1,6 +1,7 @@
 export interface IElectronAPI {
-    loadPreferences: () => Promise<void>,
-    setTitle: (title: string) => void
+    loadPreferences: () => Promise<void>;
+    setTitle: (title: string) => void;
+    openFile: (...args: unknown[]) => Promise<string | null>;
 }
 
 declare global {

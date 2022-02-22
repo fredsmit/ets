@@ -7,7 +7,7 @@ const utils_js_1 = require("./utils.js");
 // then() will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-electron_1.app.whenReady().then(() => {
+electron_1.app.whenReady().then(async () => {
     // console.log("__dirname:", __dirname);
     // console.log("__filename:", __filename);
     // __dirname: C:\Users\Alfredas\ets\win
@@ -28,8 +28,8 @@ electron_1.app.whenReady().then(() => {
         // and load the index.html of the app.
         mainWindow.loadFile(indexHtmlPath);
         // mainWindow.webContents.openDevTools();
+        return mainWindow;
     }
-    createWindow();
     electron_1.app.addListener('activate', function (ev, hasVisibleWindows) {
         console.log("ev.type:", ev.type, "hasVisibleWindows:", hasVisibleWindows);
         // On macOS it's common to re-create a window in the app when the
@@ -37,6 +37,7 @@ electron_1.app.whenReady().then(() => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0)
             createWindow();
     });
+    const mainWindow = await createWindow();
     electron_1.ipcMain.on('set-title', (ev, ...args) => {
         //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
         const webContents = ev.sender;
@@ -47,6 +48,7 @@ electron_1.app.whenReady().then(() => {
             win.setTitle(String(title));
         }
     });
+    electron_1.ipcMain.handle('dialog:openFile', getHandler(mainWindow));
 }).catch((reason) => {
     console.error("Error:", reason);
 });
@@ -58,3 +60,23 @@ electron_1.app.addListener("window-all-closed", function () {
         electron_1.app.quit();
     }
 });
+function getHandler(browserWindow) {
+    async function handleFileOpen(ev, ...args) {
+        // console.log("ev:", ev);
+        args.forEach(arg => {
+            console.log("arg:", arg, typeof arg);
+        });
+        const openDialogOptions = {};
+        const openDialog = browserWindow
+            ? electron_1.dialog.showOpenDialog(browserWindow, openDialogOptions)
+            : electron_1.dialog.showOpenDialog(openDialogOptions);
+        const { canceled, filePaths } = await openDialog;
+        if (canceled) {
+            return null;
+        }
+        else {
+            return filePaths && filePaths.length > 0 ? filePaths[0] : null;
+        }
+    }
+    return handleFileOpen;
+}
