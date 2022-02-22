@@ -1,8 +1,9 @@
 import { queryRequiredElement } from "./pageUtils.js";
-const electronApi = window.electronApi;
+const electronWindow = window;
+const electronApi = electronWindow.electronApi;
 const inTitle = queryRequiredElement(document.body, "input", "inTitle");
 const btnSetTitle = queryRequiredElement(document.body, "button", "btnSetTitle");
-console.log(inTitle, btnSetTitle);
+console.log(inTitle, btnSetTitle, electronWindow.testApi);
 btnSetTitle.addEventListener('click', function (ev) {
     const title = inTitle.value;
     electronApi.setTitle(title);

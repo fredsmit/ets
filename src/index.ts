@@ -37,7 +37,6 @@ app.whenReady().then(async (): Promise<void> => {
     // and load the index.html of the app.
     mainWindow.loadFile(indexHtmlPath);
 
-    // mainWindow.webContents.openDevTools();
     return mainWindow;
   }
 
@@ -49,6 +48,7 @@ app.whenReady().then(async (): Promise<void> => {
   });
 
   const mainWindow = await createWindow();
+  mainWindow.webContents.openDevTools();
 
   function playWithCounter() {
     const intervalId = setInterval(() => {

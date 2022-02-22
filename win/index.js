@@ -27,7 +27,6 @@ electron_1.app.whenReady().then(async () => {
         });
         // and load the index.html of the app.
         mainWindow.loadFile(indexHtmlPath);
-        // mainWindow.webContents.openDevTools();
         return mainWindow;
     }
     electron_1.app.addListener('activate', function (ev, hasVisibleWindows) {
@@ -38,6 +37,7 @@ electron_1.app.whenReady().then(async () => {
             createWindow();
     });
     const mainWindow = await createWindow();
+    mainWindow.webContents.openDevTools();
     function playWithCounter() {
         const intervalId = setInterval(() => {
             mainWindow.webContents.send('update-counter', 1);

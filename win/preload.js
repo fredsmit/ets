@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // preload with contextIsolation enabled
 const electron_1 = require("electron");
 const myApi_js_1 = require("./myApi.js");
+function exposeInMainWorld({ apiKey, api }) {
+    electron_1.contextBridge.exposeInMainWorld(apiKey, api);
+}
 electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 electron_1.contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', myApi_js_1.getCwd);
 electron_1.contextBridge.exposeInMainWorld('getNodeConfig', myApi_js_1.getNodeConfig);
@@ -18,7 +21,12 @@ const electronMainWorldApi = {
         }
     }
 };
-electron_1.contextBridge.exposeInMainWorld(electronMainWorldApi.apiKey, electronMainWorldApi.api);
+exposeInMainWorld(electronMainWorldApi);
+const testMainWorldApi = {
+    apiKey: "testApi",
+    api: Date.now()
+};
+exposeInMainWorld(testMainWorldApi);
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {
