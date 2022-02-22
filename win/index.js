@@ -38,6 +38,32 @@ electron_1.app.whenReady().then(async () => {
             createWindow();
     });
     const mainWindow = await createWindow();
+    function playWithCounter() {
+        const intervalId = setInterval(() => {
+            mainWindow.webContents.send('update-counter', 1);
+        }, 500);
+        setTimeout(() => { clearInterval(intervalId); }, 10000);
+    }
+    const menu = electron_1.Menu.buildFromTemplate([
+        {
+            label: "Counter",
+            submenu: [
+                {
+                    click: () => mainWindow.webContents.send('update-counter', 1),
+                    label: 'Increment',
+                },
+                {
+                    click: () => mainWindow.webContents.send('update-counter', -1),
+                    label: 'Decrement',
+                },
+                {
+                    click: () => playWithCounter(),
+                    label: 'Play',
+                }
+            ]
+        }
+    ]);
+    electron_1.Menu.setApplicationMenu(menu);
     electron_1.ipcMain.on('set-title', (ev, ...args) => {
         //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
         const webContents = ev.sender;

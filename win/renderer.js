@@ -13,4 +13,5 @@ console.log("KUKU.document:", document);
 const myObject = window.myAPI;
 console.log("myObject:", myObject);
 myObject.doAThing("myKUKU");
-console.log(window.electronAPI);
+//import type { } from "../types/renderer";
+console.log(window.electronApi);

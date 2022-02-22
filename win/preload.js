@@ -7,12 +7,18 @@ const myApi_js_1 = require("./myApi.js");
 electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 electron_1.contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', myApi_js_1.getCwd);
 electron_1.contextBridge.exposeInMainWorld('getNodeConfig', myApi_js_1.getNodeConfig);
-const electronAPI = {
-    loadPreferences: () => electron_1.ipcRenderer.invoke('load-prefs'),
-    setTitle: (title) => electron_1.ipcRenderer.send('set-title', title),
-    openFile: (...args) => electron_1.ipcRenderer.invoke('dialog:openFile', ...args)
+const electronMainWorldApi = {
+    apiKey: "electronApi",
+    api: {
+        loadPreferences: () => electron_1.ipcRenderer.invoke('load-prefs'),
+        setTitle: (title) => electron_1.ipcRenderer.send('set-title', title),
+        openFile: (...args) => electron_1.ipcRenderer.invoke('dialog:openFile', ...args),
+        handleCounter: (listener) => {
+            electron_1.ipcRenderer.on('update-counter', listener);
+        }
+    }
 };
-electron_1.contextBridge.exposeInMainWorld('electronAPI', electronAPI);
+electron_1.contextBridge.exposeInMainWorld(electronMainWorldApi.apiKey, electronMainWorldApi.api);
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev) => {

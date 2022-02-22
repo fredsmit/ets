@@ -1,23 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 // preload with contextIsolation enabled
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
-import type { IElectronAPI } from '../types/renderer';
+import type { ElectronMainWorldApi } from '../types/renderer';
 
-const electronAPI: IElectronAPI = {
-  loadPreferences: () => ipcRenderer.invoke('load-prefs'),
-  setTitle: (title: string) => ipcRenderer.send('set-title', title),
-  openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args)
+const electronMainWorldApi: ElectronMainWorldApi = {
+  apiKey: "electronApi",
+  api: {
+    loadPreferences: () => ipcRenderer.invoke('load-prefs'),
+    setTitle: (title: string) => ipcRenderer.send('set-title', title),
+    openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args),
+    handleCounter: (listener: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('update-counter', listener);
+    }
+  }
 };
 
-contextBridge.exposeInMainWorld('electronAPI', electronAPI);
-
+contextBridge.exposeInMainWorld(electronMainWorldApi.apiKey, electronMainWorldApi.api);
 
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.

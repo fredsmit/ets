@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import type { IElectronAPI } from "../types/renderer";
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import type { ElectronApi } from "../types/renderer";
+import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
 import * as path from "path";
 
 import { testUtil } from "./utils.js";
@@ -50,6 +50,34 @@ app.whenReady().then(async (): Promise<void> => {
 
   const mainWindow = await createWindow();
 
+  function playWithCounter() {
+    const intervalId = setInterval(() => {
+      mainWindow.webContents.send('update-counter', 1);
+    }, 500);
+    setTimeout(() => { clearInterval(intervalId); }, 10000);
+  }
+
+  const menu = Menu.buildFromTemplate([
+    {
+      label: "Counter",
+      submenu: [
+        {
+          click: () => mainWindow.webContents.send('update-counter', 1),
+          label: 'Increment',
+        },
+        {
+          click: () => mainWindow.webContents.send('update-counter', -1),
+          label: 'Decrement',
+        },
+        {
+          click: () => playWithCounter(),
+          label: 'Play',
+        }
+      ]
+    }
+  ]);
+
+  Menu.setApplicationMenu(menu);
 
   ipcMain.on('set-title', (ev: Electron.IpcMainEvent, ...args: unknown[]) => {
     //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
@@ -81,10 +109,10 @@ app.addListener("window-all-closed", function () {
 });
 
 function getHandler(browserWindow?: BrowserWindow)
-  : (ev: Electron.IpcMainInvokeEvent, ...args: unknown[]) => ReturnType<IElectronAPI["openFile"]> {
+  : (ev: Electron.IpcMainInvokeEvent, ...args: unknown[]) => ReturnType<ElectronApi["openFile"]> {
 
   async function handleFileOpen(ev: Electron.IpcMainInvokeEvent, ...args: unknown[])
-    : ReturnType<IElectronAPI["openFile"]> {
+    : ReturnType<ElectronApi["openFile"]> {
 
     // console.log("ev:", ev);
     args.forEach(arg => {
