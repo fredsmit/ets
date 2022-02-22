@@ -29,7 +29,7 @@ app.whenReady().then((): void => {
       webPreferences: {
         preload: preloadJsPath,
         nodeIntegration: true,
-        zoomFactor: 150
+        zoomFactor: 1.5
       },
     });
 

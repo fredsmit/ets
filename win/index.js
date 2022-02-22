@@ -22,7 +22,7 @@ electron_1.app.whenReady().then(() => {
             webPreferences: {
                 preload: preloadJsPath,
                 nodeIntegration: true,
-                zoomFactor: 150
+                zoomFactor: 1.5
             },
         });
         // and load the index.html of the app.
