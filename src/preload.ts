@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
-import { IElectronAPI } from '../types/renderer';
+import type { IElectronAPI } from '../types/renderer';
 
 const electronAPI: IElectronAPI = {
   loadPreferences: () => ipcRenderer.invoke('load-prefs'),

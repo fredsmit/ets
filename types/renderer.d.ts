@@ -1,4 +1,4 @@
-export interface IElectronAPI {
+export type IElectronAPI = {
     loadPreferences: () => Promise<void>;
     setTitle: (title: string) => void;
     openFile: (...args: unknown[]) => Promise<string | null>;

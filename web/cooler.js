@@ -12,7 +12,7 @@ const btnOpenFile = queryRequiredElement(document.body, "button", "btnOpenFile")
 const dvFilePath = queryRequiredElement(document.body, "strong", "dvFilePath");
 let currentFileName;
 btnOpenFile.addEventListener('click', async function (ev) {
-    const args = currentFileName ? [currentFileName] : [1, 2, 3];
+    const args = currentFileName ? [currentFileName] : [];
     const fileName = await window.electronAPI.openFile(...args);
     if (fileName) {
         currentFileName = fileName;

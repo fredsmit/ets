@@ -1,12 +1,11 @@
 import { getRequiredHTMLElements } from "./pageUtils.js"
-import { } from "../types/renderer";
+import type { } from "../types/renderer";
 
 const nodeWindow = (window as typeof window & NodeWindow);
 const getCurrentWorkingDirectory = nodeWindow.getCurrentWorkingDirectory;
 const getNodeConfig = nodeWindow.getNodeConfig;
 
-//type x = Window["electronAPI"];
-console.log(window.electronAPI);
+//console.log(window.electronAPI);
 
 // const btnClick = document.getElementById("btnClick");
 // const dvDisplay = document.getElementById("dvDisplay");
@@ -27,15 +26,5 @@ btnClick.addEventListener("click", function (this: HTMLElement, ev: MouseEvent):
     dvDisplay.append(div);
     dvDisplay.append(div2);
 });
-
-// if (btnClick && dvDisplay) {
-//     btnClick.addEventListener("click", function (this: HTMLElement, ev: MouseEvent): void {
-//         console.log(ev.type);
-//         const cwd = getCurrentWorkingDirectory();
-//         const div = document.createElement("div");
-//         div.innerHTML = cwd + "&nbsp;&nbsp;" + Date.now();
-//         dvDisplay.append(div);
-//     });
-// }
 
 

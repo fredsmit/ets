@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import { IElectronAPI } from "../types/renderer";
+import type { IElectronAPI } from "../types/renderer";
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from "path";
 

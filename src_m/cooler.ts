@@ -1,5 +1,5 @@
 import { queryRequiredElement } from "./pageUtils.js"
-import { } from "../types/renderer";
+import type { } from "../types/renderer";
 
 const inTitle = queryRequiredElement(document.body, "input", "inTitle");
 const btnSetTitle = queryRequiredElement(document.body, "button", "btnSetTitle");
