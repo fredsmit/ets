@@ -1,12 +1,13 @@
 import { queryRequiredElement } from "./pageUtils.js"
-import type { ElectronApi } from "../types/renderer";
+import type { ElectronApi, IElectronWindow } from "../types/renderer";
 
-const electronApi: ElectronApi = window.electronApi;
+const electronWindow: IElectronWindow = window;
+const electronApi: ElectronApi = electronWindow.electronApi;
 
 const inTitle = queryRequiredElement(document.body, "input", "inTitle");
 const btnSetTitle = queryRequiredElement(document.body, "button", "btnSetTitle");
 
-console.log(inTitle, btnSetTitle);
+console.log(inTitle, btnSetTitle, electronWindow.testApi);
 
 btnSetTitle.addEventListener('click', function (this: HTMLButtonElement, ev: MouseEvent): void {
     const title = inTitle.value

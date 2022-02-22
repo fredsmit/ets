@@ -2,7 +2,7 @@ import type { IpcRendererEvent } from 'electron';
 
 export type MainWorldApiKeys = "electronApi" | "testApi";
 
-export type MainWorldApi<TApiKey extends MainWorldApiKeys, TApi = unknown> = {
+export type MainWorldApi<TApiKey extends MainWorldApiKeys = MainWorldApiKeys, TApi = unknown> = {
     apiKey: TApiKey;
     api: TApi;
 }

@@ -4,11 +4,15 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
+import type { ElectronMainWorldApi, MainWorldApi } from '../types/renderer';
+
+function exposeInMainWorld({ apiKey, api }: MainWorldApi): void {
+  contextBridge.exposeInMainWorld(apiKey, api);
+}
+
 contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
-
-import type { ElectronMainWorldApi } from '../types/renderer';
 
 const electronMainWorldApi: ElectronMainWorldApi = {
   apiKey: "electronApi",
@@ -22,7 +26,14 @@ const electronMainWorldApi: ElectronMainWorldApi = {
   }
 };
 
-contextBridge.exposeInMainWorld(electronMainWorldApi.apiKey, electronMainWorldApi.api);
+exposeInMainWorld(electronMainWorldApi);
+
+const testMainWorldApi: MainWorldApi<"testApi"> = {
+  apiKey: "testApi",
+  api: Date.now()
+};
+
+exposeInMainWorld(testMainWorldApi);
 
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
