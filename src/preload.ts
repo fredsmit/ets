@@ -20,7 +20,7 @@ const electronMainWorldApi: ElectronMainWorldApi = {
     loadPreferences: () => ipcRenderer.invoke('load-prefs'),
     setTitle: (title: string) => ipcRenderer.send('set-title', title),
     openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args),
-    handleCounter: (listener: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+    onUpdateCounter: (listener: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
       ipcRenderer.on('update-counter', listener);
     }
   }

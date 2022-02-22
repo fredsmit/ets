@@ -27,6 +27,7 @@ electronApi.handleCounter((ev, value) => {
         const oldValue = Number(dvCounter.innerText);
         const newValue = oldValue + value;
         dvCounter.innerText = String(newValue);
-        //event.reply('counter-value', newValue);
+        console.dir(ev);
+        //ev.reply('counter-value', newValue);
     }
 });

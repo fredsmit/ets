@@ -33,13 +33,16 @@ btnOpenFile.addEventListener('click', async function (this: HTMLButtonElement, e
 
 const dvCounter = queryRequiredElement(document.body, "strong", "dvCounter");
 
-electronApi.handleCounter((ev: Electron.IpcRendererEvent, value: unknown) => {
+function counterUpdateListener(ev: Electron.IpcRendererEvent, value: unknown): void {
     if (typeof value === "number") {
         const oldValue = Number(dvCounter.innerText);
         const newValue = oldValue + value;
         dvCounter.innerText = String(newValue);
-        //event.reply('counter-value', newValue);
+        //ev.reply('counter-value', newValue);
     }
-})
+}
+
+electronApi.onUpdateCounter(counterUpdateListener);
 
 export { }
+

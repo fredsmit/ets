@@ -11,7 +11,7 @@ export type ElectronApi = {
     loadPreferences: () => Promise<void>;
     setTitle: (title: string) => void;
     openFile: (...args: unknown[]) => Promise<string | null>;
-    handleCounter: (listener: (ev: IpcRendererEvent, ...args: unknown[]) => void) => void;
+    onUpdateCounter: (listener: (ev: IpcRendererEvent, ...args: unknown[]) => void) => void;
 }
 
 export type ElectronMainWorldApi = MainWorldApi<"electronApi", ElectronApi>;
