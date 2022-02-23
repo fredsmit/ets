@@ -20,7 +20,7 @@ declare global {
     interface Window {
         readonly electronApi: ElectronMainWorldApi["api"];
         readonly testApi?: unknown;
-        structuredClone<T>(value: T, transfer?: Transferable[]): T;
+        structuredClone<T>(value: T, options?: { transfer?: Transferable[]; }): T;
     }
 }
 
