@@ -13,9 +13,9 @@
     "moduleResolution": "node",
     //
     //
-    "target": "es2020",
+    "target": "es2021",
     "lib": [
-      "es2019",
+      "es2021",
       "esnext.weakref",
       "dom",
       "dom.iterable"

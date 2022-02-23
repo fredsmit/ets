@@ -17,6 +17,7 @@ btnOpenFile.addEventListener('click', async function (ev) {
     const args = currentFileName ? [currentFileName] : [];
     const fileName = await electronApi.openFile(...args);
     if (fileName) {
+        console.log("fileName:", window.structuredClone({ currentFileName, fileName }));
         currentFileName = fileName;
         dvFilePath.innerText = fileName;
     }
@@ -27,7 +28,9 @@ function counterUpdateListener(ev, value) {
         const oldValue = Number(dvCounter.innerText);
         const newValue = oldValue + value;
         dvCounter.innerText = String(newValue);
-        //ev.reply('counter-value', newValue);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        // ev.reply('counter-value', newValue);
     }
 }
 electronApi.onUpdateCounter(counterUpdateListener);

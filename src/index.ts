@@ -29,7 +29,6 @@ app.whenReady().then(async (): Promise<void> => {
       height: 800,
       webPreferences: {
         preload: preloadJsPath,
-        nodeIntegration: true,
         zoomFactor: 1.50
       },
     });
