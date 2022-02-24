@@ -1,8 +1,9 @@
-import { queryRequiredElement } from "./pageUtils.js"
 import type { ElectronApi, IElectronWindow } from "../types/renderer";
-
 const electronWindow: IElectronWindow = window;
 const electronApi: ElectronApi = electronWindow.electronApi;
+
+import { queryRequiredElement } from "./pageUtils.js"
+
 
 const inTitle = queryRequiredElement(document.body, "input", "inTitle");
 const btnSetTitle = queryRequiredElement(document.body, "button", "btnSetTitle");

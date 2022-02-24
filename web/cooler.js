@@ -1,6 +1,6 @@
-import { queryRequiredElement } from "./pageUtils.js";
 const electronWindow = window;
 const electronApi = electronWindow.electronApi;
+import { queryRequiredElement } from "./pageUtils.js";
 const inTitle = queryRequiredElement(document.body, "input", "inTitle");
 const btnSetTitle = queryRequiredElement(document.body, "button", "btnSetTitle");
 console.log(inTitle, btnSetTitle, electronWindow.testApi);

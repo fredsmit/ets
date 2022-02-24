@@ -8,6 +8,7 @@ export type MainWorldApi<TApiKey extends MainWorldApiKeys = MainWorldApiKeys, TA
 }
 
 export type ElectronApi = {
+    versions: Readonly<Record<string, string>>,
     loadPreferences: () => Promise<void>;
     setTitle: (title: string) => void;
     openFile: (...args: unknown[]) => Promise<string | null>;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import type { ElectronApi } from "../types/renderer";
-import { app, BrowserWindow, ipcMain, dialog, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu } from 'electron';
 import * as path from "path";
 
 import { testUtil } from "./utils.js";
@@ -16,7 +16,7 @@ app.whenReady().then(async (): Promise<void> => {
   // console.log("__filename:", __filename);
   // __dirname: C:\Users\Alfredas\ets\win
   // __filename C:\Users\Alfredas\ets\win\index.js
-
+  
   async function createWindow(): Promise<BrowserWindow> {
 
     testUtil("==> createWindow");
@@ -24,10 +24,14 @@ app.whenReady().then(async (): Promise<void> => {
     const preloadJsPath = path.join(__dirname, "preload.js");
     const indexHtmlPath = path.join(__dirname, "../index.html");
 
+    console.log("new BrowserWindow::ipcMain:", ipcMain);
+    console.log("new BrowserWindow::ipcRenderer:", ipcRenderer); // undefined
+
     const mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
       webPreferences: {
+        nodeIntegration: true,
         preload: preloadJsPath,
         zoomFactor: 1.50
       },

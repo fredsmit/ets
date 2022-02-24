@@ -16,12 +16,14 @@ electron_1.app.whenReady().then(async () => {
         (0, utils_js_1.testUtil)("==> createWindow");
         const preloadJsPath = path.join(__dirname, "preload.js");
         const indexHtmlPath = path.join(__dirname, "../index.html");
+        console.log("new BrowserWindow::ipcMain:", electron_1.ipcMain);
+        console.log("new BrowserWindow::ipcRenderer:", electron_1.ipcRenderer); // undefined
         const mainWindow = new electron_1.BrowserWindow({
             width: 1200,
             height: 800,
             webPreferences: {
-                preload: preloadJsPath,
                 nodeIntegration: true,
+                preload: preloadJsPath,
                 zoomFactor: 1.50
             },
         });

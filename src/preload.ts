@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 // preload with contextIsolation enabled
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcMain, ipcRenderer, IpcRendererEvent } from 'electron';
 import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
 import type { ElectronMainWorldApi, MainWorldApi } from '../types/renderer';
@@ -14,9 +14,15 @@ contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
 
+const versions = Object.fromEntries(
+  Object.entries(globalThis.process.versions)
+    .map<[string, string]>(entry => [entry[0], entry[1] ?? ""])
+);
+
 const electronMainWorldApi: ElectronMainWorldApi = {
   apiKey: "electronApi",
   api: {
+    versions,
     loadPreferences: () => ipcRenderer.invoke('load-prefs'),
     setTitle: (title: string) => ipcRenderer.send('set-title', title),
     openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args),
@@ -35,32 +41,23 @@ const testMainWorldApi: MainWorldApi<"testApi"> = {
 
 exposeInMainWorld(testMainWorldApi);
 
+const messageChannel = new MessageChannel();
+const aports = {
+  port1: window.structuredClone(messageChannel.port1, { transfer: [messageChannel.port1] }),
+  port2: window.structuredClone(messageChannel.port2, { transfer: [messageChannel.port2] }),
+  id1: "p1",
+  id2: "p2",
+  ipcRenderer,
+  ipcMain
+};
+contextBridge.exposeInMainWorld('APORTS', aports);
+
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 window.addEventListener("DOMContentLoaded", (ev: Event) => {
   console.log("DOMContentLoaded:", ev);
-
-  const dvCounter2 = document.getElementById('dvCounter2');
-  function counterUpdateListener2(_ev: unknown, value: unknown): void {
-    if (dvCounter2 && typeof value === "number") {
-      const oldValue = Number(dvCounter2.innerText) * Math.PI;
-      const newValue = oldValue + value;
-      dvCounter2.innerText = String(newValue);
-    }
-  }
-
-  setTimeout(() => {
-    ipcRenderer.removeListener('update-counter', counterUpdateListener2);
-  }, 10000);
-
-  ipcRenderer.on('update-counter', counterUpdateListener2);
-
-  function replaceText(selector: string, text?: string): void {
-    const element = document.getElementById(selector);
-    if (element) {
-      element.innerText = text ?? "Unknown";
-    }
-  }
+  // console.log("preload::ipcMain:", ipcMain); // undefined
+  // console.log("preload::ipcRenderer:", ipcRenderer);
 
   //  ares: "1.17.2"
   //* brotli: "1.0.9"
@@ -78,10 +75,6 @@ window.addEventListener("DOMContentLoaded", (ev: Event) => {
   //  v8: "9.8.177.9-electron.0"
   //  zlib: "1.2.11"
   //  http_parser: ?
-
-  for (const electronComponent of ["chrome", "node", "electron"]) {
-    replaceText(`${electronComponent}-version`, process.versions[electronComponent as keyof NodeJS.ProcessVersions]);
-  }
 
   console.log("process.versions:", process.versions);
   console.log("process.platform:", process.platform); // win32
