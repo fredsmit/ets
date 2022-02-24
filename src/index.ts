@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import type { ElectronApi } from "../types/renderer";
-import { app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu } from 'electron';
+import {
+  app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu,
+  HandlerDetails, BrowserWindowConstructorOptions,
+  webContents
+} from 'electron';
 import * as path from "path";
 
 import { testUtil } from "./utils.js";
@@ -10,34 +14,74 @@ import { testUtil } from "./utils.js";
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
+const startAppMsg = `
+*** Start app ******************************************************************
+`;
+console.log(startAppMsg);
+
 app.whenReady().then(async (): Promise<void> => {
 
-  // console.log("__dirname:", __dirname);
-  // console.log("__filename:", __filename);
+  console.log(`*** app:ready: __dirname: ${__dirname}`);
+  console.log(`*** app:ready: __filename: ${__filename}`);
+
   // __dirname: C:\Users\Alfredas\ets\win
   // __filename C:\Users\Alfredas\ets\win\index.js
-  
+
+  const preloadJsPath = path.join(__dirname, "preload.js");
+  const indexHtmlPath = path.join(__dirname, "../index.html");
+
   async function createWindow(): Promise<BrowserWindow> {
 
     testUtil("==> createWindow");
 
-    const preloadJsPath = path.join(__dirname, "preload.js");
-    const indexHtmlPath = path.join(__dirname, "../index.html");
-
-    console.log("new BrowserWindow::ipcMain:", ipcMain);
-    console.log("new BrowserWindow::ipcRenderer:", ipcRenderer); // undefined
+    console.log(`*** app.createWindow: preload: ${preloadJsPath}`);
+    console.log(`*** app.createWindow: ipcMain: ${Object.prototype.toString.call(ipcMain)}`);
+    console.log(`*** app.createWindow: ipcRenderer: ${Object.prototype.toString.call(ipcRenderer)}`);
 
     const mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
+      width: 1400,
+      height: 840,
       webPreferences: {
+        // DEFAULT: contextIsolation: true
         nodeIntegration: true,
         preload: preloadJsPath,
         zoomFactor: 1.50
       },
     });
 
-    // and load the index.html of the app.
+    function windowOpenHandler(details: HandlerDetails): ({
+      action: 'deny'
+    }) | ({
+      action: 'allow',
+      overrideBrowserWindowOptions?: BrowserWindowConstructorOptions
+    }) {
+      //console.log("==> windowOpenHandler.details:", details);
+      const url = new URL(details.url);
+      if (url.protocol === "file:" && details.frameName === "dialog-2") {
+        return {
+          action: "allow",
+          overrideBrowserWindowOptions: {
+            parent: mainWindow,
+            modal: true
+          }
+        };
+      } else {
+        return { action: "deny" };
+      }
+
+    }
+
+    mainWindow.webContents.setWindowOpenHandler(windowOpenHandler);
+
+    mainWindow.webContents.addListener("preload-error",
+      function (event: Electron.Event, preloadPath: string, error: Error): void {
+        console.error("event:", event);
+        console.error("preloadPath:", preloadPath);
+        console.error("error:", error);
+      }
+    );
+
+    console.log(`*** app.createWindow: loadFile: ${indexHtmlPath}`);
     mainWindow.loadFile(indexHtmlPath);
 
     return mainWindow;
@@ -75,6 +119,18 @@ app.whenReady().then(async (): Promise<void> => {
         {
           click: () => playWithCounter(),
           label: 'Play',
+        },
+        {
+          click: () => {
+            mainWindow.webContents.loadURL(indexHtmlPath);
+          },
+          label: '==> Home',
+        },
+        {
+          click: () => {
+            webContents.getFocusedWebContents().openDevTools();
+          },
+          label: '==> Open Dev Tools',
         }
       ]
     }

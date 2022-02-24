@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page 3</title>
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" /> -->
+    <!-- <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" /> -->
+    <!-- <script type="module" src="t68.js"></script> -->
+    <!-- <script type="module" src="./web/renderer.js"></script>
+    <script type="module" src="./web/small.js"></script>
+    <script type="module" src="./web/cool.js"></script>
+    <script type="module" src="./web/cooler.js"></script>
+    <style>
+        #dvDisplay {
+            border: 1px solid red;
+        }
+    </style> -->
+    <script type="module">
+        const div = document.createElement("div");
+        if (window.opener) {
+            div.innerText = window.opener.electronApi.versions;
+        }
+        document.body.append(div);
+    </script>
+</head>
+
+<body>
+    <h1>Page 3</h1>
+    <a href="./index.html">Index</a>
+    <a href="./page2.html">Page 2</a>
+    <a href="./page3.html">Page 3</a>
+
+
+    <button onclick="window.open(`file:///C:/Users/Alfredas/ets/page2.html`, 'dialog-2');">Open 2</button>
+    <button onclick="window.open(`./page3.html`);">Open 3</button>
+
+</body>
+
+</html>

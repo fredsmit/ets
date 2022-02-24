@@ -1,18 +1,61 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-// preload with contextIsolation enabled
+// *****************************************************************************
+// *** preload with contextIsolation enabled ***********************************
+// *****************************************************************************
+// *** Node.js APIs are available in the preload process. **********************
+// *** It has the same sandbox as a Chrome extension. **************************
+// *** The context that the `preload` script runs in will only have access *****
+// *** to its own dedicated `document` and `window` globals, as well as its ****
+// *** own set of JavaScript builtins (`Array`, `Object`, `JSON`, etc.), *******
+// *** which are all invisible to the loaded content. The Electron API *********
+// *** will only be available in the `preload` script and not the loaded page. *
+// *****************************************************************************
+
 import { contextBridge, ipcMain, ipcRenderer, IpcRendererEvent } from 'electron';
 import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 
 import type { ElectronMainWorldApi, MainWorldApi } from '../types/renderer';
 
+console.log("==> start preload:", window.location);
+const preloadingLocation = window.location;
+
+const startPreloadMsg = `==> Start preload: ${Date.now()}`;
+console.log(startPreloadMsg);
+console.log(`==> Start preload: ipcMain: ${Object.prototype.toString.call(ipcMain)}`);
+console.log(`==> Start preload: ipcRenderer: ${Object.prototype.toString.call(ipcRenderer)}`);
+
+window.addEventListener("load", function (this: Window, ev: Event): void {
+  console.log("load:", ev, this.location);
+  console.log("load:preloadingLocation:", preloadingLocation);
+});
+
+
 function exposeInMainWorld({ apiKey, api }: MainWorldApi): void {
+  console.log("exposeInMainWorld:", apiKey);
   contextBridge.exposeInMainWorld(apiKey, api);
 }
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
 contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', getCwd);
 contextBridge.exposeInMainWorld('getNodeConfig', getNodeConfig);
+
+//  ares: "1.17.2"
+//* brotli: "1.0.9"
+//  chrome: "98.0.4758.82"
+//  electron: "17.0.1"
+//* icu: "70.1"
+//* llhttp: "6.0.4"
+//  modules: "101"
+//* napi: "8"
+//* nghttp2: "1.45.1"
+//  node: "16.13.0"
+//  openssl: "1.1.1"
+//* unicode: "14.0"
+//  uv: "1.42.0"
+//  v8: "9.8.177.9-electron.0"
+//  zlib: "1.2.11"
+//  http_parser: ?
 
 const versions = Object.fromEntries(
   Object.entries(globalThis.process.versions)
@@ -50,41 +93,19 @@ const aports = {
   ipcRenderer,
   ipcMain
 };
+console.log(`contextBridge.exposeInMainWorld('APORTS', aports);`);
+
 contextBridge.exposeInMainWorld('APORTS', aports);
 
-// All of the Node.js APIs are available in the preload process.
-// It has the same sandbox as a Chrome extension.
+// *** Node.js APIs are available in the preload process. **********************
+// *** JavaScript builtins, `window` and `document` are specialized, ***********
+// *** which are all invisible to the loaded content. **************************
 window.addEventListener("DOMContentLoaded", (ev: Event) => {
   console.log("DOMContentLoaded:", ev);
-  // console.log("preload::ipcMain:", ipcMain); // undefined
-  // console.log("preload::ipcRenderer:", ipcRenderer);
+  console.log(`==> preload:DOMContentLoaded: ipcMain: ${Object.prototype.toString.call(ipcMain)}`);
 
-  //  ares: "1.17.2"
-  //* brotli: "1.0.9"
-  //  chrome: "98.0.4758.82"
-  //  electron: "17.0.1"
-  //* icu: "70.1"
-  //* llhttp: "6.0.4"
-  //  modules: "101"
-  //* napi: "8"
-  //* nghttp2: "1.45.1"
-  //  node: "16.13.0"
-  //  openssl: "1.1.1"
-  //* unicode: "14.0"
-  //  uv: "1.42.0"
-  //  v8: "9.8.177.9-electron.0"
-  //  zlib: "1.2.11"
-  //  http_parser: ?
-
-  console.log("process.versions:", process.versions);
-  console.log("process.platform:", process.platform); // win32
-  console.log("__dirname:", __dirname);
-  console.log("__filename:", __filename);
-
-  // for (const entry of Object.entries(process.versions)) {
-  //   console.log(entry);
-  // }
-
+  console.log(`==> preload:DOMContentLoaded: ipcRenderer: ${Object.prototype.toString.call(ipcRenderer)}`);
 });
+
 
 export { };
