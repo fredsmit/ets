@@ -15,7 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const myApi_js_1 = require("./myApi.js");
 console.log("==> start preload:", window.location);
+//console.log(`==> start preload: app.getAppPath: ${app.getAppPath()}`);
+console.log("==> start preload:", __dirname);
+console.log("==> start preload:", __filename);
 const preloadingLocation = window.location;
+const allowPreload = preloadingLocation.origin === "file://";
 const startPreloadMsg = `==> Start preload: ${Date.now()}`;
 console.log(startPreloadMsg);
 console.log(`==> Start preload: ipcMain: ${Object.prototype.toString.call(electron_1.ipcMain)}`);
@@ -25,8 +29,10 @@ window.addEventListener("load", function (ev) {
     console.log("load:preloadingLocation:", preloadingLocation);
 });
 function exposeInMainWorld({ apiKey, api }) {
-    console.log("exposeInMainWorld:", apiKey);
-    electron_1.contextBridge.exposeInMainWorld(apiKey, api);
+    if (allowPreload) {
+        console.log("exposeInMainWorld:", apiKey);
+        electron_1.contextBridge.exposeInMainWorld(apiKey, api);
+    }
 }
 electron_1.contextBridge.exposeInMainWorld('myAPI', myApi_js_1.myObject);
 electron_1.contextBridge.exposeInMainWorld('getCurrentWorkingDirectory', myApi_js_1.getCwd);
@@ -49,10 +55,15 @@ electron_1.contextBridge.exposeInMainWorld('getNodeConfig', myApi_js_1.getNodeCo
 //  http_parser: ?
 const versions = Object.fromEntries(Object.entries(globalThis.process.versions)
     .map(entry => [entry[0], entry[1] ?? ""]));
+function showContextMenu(...args) {
+    console.log("showContextMenu:", args);
+    electron_1.ipcRenderer.send('show-context-menu', args);
+}
 const electronMainWorldApi = {
     apiKey: "electronApi",
     api: {
         versions,
+        showContextMenu,
         loadPreferences: () => electron_1.ipcRenderer.invoke('load-prefs'),
         setTitle: (title) => electron_1.ipcRenderer.send('set-title', title),
         openFile: (...args) => electron_1.ipcRenderer.invoke('dialog:openFile', ...args),

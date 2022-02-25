@@ -18,7 +18,12 @@ import { myObject, getCwd, getNodeConfig } from "./myApi.js";
 import type { ElectronMainWorldApi, MainWorldApi } from '../types/renderer';
 
 console.log("==> start preload:", window.location);
+//console.log(`==> start preload: app.getAppPath: ${app.getAppPath()}`);
+
+console.log("==> start preload:", __dirname);
+console.log("==> start preload:", __filename);
 const preloadingLocation = window.location;
+const allowPreload = preloadingLocation.origin === "file://";
 
 const startPreloadMsg = `==> Start preload: ${Date.now()}`;
 console.log(startPreloadMsg);
@@ -30,10 +35,11 @@ window.addEventListener("load", function (this: Window, ev: Event): void {
   console.log("load:preloadingLocation:", preloadingLocation);
 });
 
-
 function exposeInMainWorld({ apiKey, api }: MainWorldApi): void {
-  console.log("exposeInMainWorld:", apiKey);
-  contextBridge.exposeInMainWorld(apiKey, api);
+  if (allowPreload) {
+    console.log("exposeInMainWorld:", apiKey);
+    contextBridge.exposeInMainWorld(apiKey, api);
+  }
 }
 
 contextBridge.exposeInMainWorld('myAPI', myObject);
@@ -62,10 +68,17 @@ const versions = Object.fromEntries(
     .map<[string, string]>(entry => [entry[0], entry[1] ?? ""])
 );
 
+
+function showContextMenu(...args: unknown[]): void {
+  console.log("showContextMenu:", args);
+  ipcRenderer.send('show-context-menu', args);
+}
+
 const electronMainWorldApi: ElectronMainWorldApi = {
   apiKey: "electronApi",
   api: {
     versions,
+    showContextMenu,
     loadPreferences: () => ipcRenderer.invoke('load-prefs'),
     setTitle: (title: string) => ipcRenderer.send('set-title', title),
     openFile: (...args: unknown[]): Promise<string | null> => ipcRenderer.invoke('dialog:openFile', ...args),

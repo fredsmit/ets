@@ -2,8 +2,9 @@
 
 import type { ElectronApi } from "../types/renderer";
 import {
-  app, BrowserWindow, ipcMain, ipcRenderer, dialog, Menu,
+  app, BrowserWindow, ipcMain, ipcRenderer, dialog,
   HandlerDetails, BrowserWindowConstructorOptions,
+  Menu, MenuItem, MenuItemConstructorOptions,
   webContents
 } from 'electron';
 import * as path from "path";
@@ -20,6 +21,7 @@ const startAppMsg = `
 console.log(startAppMsg);
 
 app.whenReady().then(async (): Promise<void> => {
+  //getPath(name: 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps')
 
   console.log(`*** app:ready: __dirname: ${__dirname}`);
   console.log(`*** app:ready: __filename: ${__filename}`);
@@ -44,6 +46,7 @@ app.whenReady().then(async (): Promise<void> => {
       webPreferences: {
         // DEFAULT: contextIsolation: true
         nodeIntegration: true,
+        nodeIntegrationInSubFrames: true,
         preload: preloadJsPath,
         zoomFactor: 1.50
       },
@@ -104,7 +107,7 @@ app.whenReady().then(async (): Promise<void> => {
     setTimeout(() => { clearInterval(intervalId); }, 10000);
   }
 
-  const menu = Menu.buildFromTemplate([
+  const template: (MenuItemConstructorOptions | MenuItem)[] = [
     {
       label: "Counter",
       submenu: [
@@ -133,8 +136,65 @@ app.whenReady().then(async (): Promise<void> => {
           label: '==> Open Dev Tools',
         }
       ]
+    },
+    // { role: 'fileMenu' }
+    {
+      label: 'File',
+      submenu: [
+        { role: 'quit' }
+      ]
+    },
+    // { role: 'editMenu' }
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+      ]
+    },
+    // { role: 'viewMenu' }
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    // { role: 'windowMenu' }
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'zoom' },
+        { role: 'close' }
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://electronjs.org')
+          }
+        }
+      ]
     }
-  ]);
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
 
   Menu.setApplicationMenu(menu);
 
@@ -195,5 +255,34 @@ function getHandler(browserWindow?: BrowserWindow)
 
 // In this file you can include the rest of your app"s specific main process code.
 // You can also put them in separate files and require them here.
+
+import "./main2.js";
+
+import { SerialPort } from "serialport";
+import type { PortInfo } from '@serialport/bindings-cpp';
+
+const querySerialPorts: Promise<PortInfo[]> = SerialPort.list();
+(async () => {
+  const serialPorts = await querySerialPorts;
+  serialPorts.forEach(portInfo => {
+    console.log("serialPort:", portInfo);
+    const serialPort = new SerialPort({
+      path: 'COM1',
+      baudRate: 9600,
+    }
+    )
+    //serialPort.write('ROBOT POWER ON');
+    serialPort.open((err: Error | null) => {
+      if (err) {
+        console.error("Error:", err);
+      }
+    });
+    const res = serialPort.read(10);
+    console.log("res:", res);
+
+
+  });
+
+})();
 
 export { };

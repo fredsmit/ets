@@ -13,6 +13,7 @@ export type ElectronApi = {
     setTitle: (title: string) => void;
     openFile: (...args: unknown[]) => Promise<string | null>;
     onUpdateCounter: (listener: (ev: IpcRendererEvent, ...args: unknown[]) => void) => void;
+    showContextMenu: (...args: unknown[]) => void;
 }
 
 export type ElectronMainWorldApi = MainWorldApi<"electronApi", ElectronApi>;

@@ -33,6 +33,7 @@
   "homepage": "https://github.com/electron/electron-quick-start-typescript#readme",
   "main": "./win/index.js",
   "dependencies": {
-    "asar": "^3.1.0"
+    "asar": "^3.1.0",
+    "serialport": "^10.3.0"
   }
 }

@@ -12,6 +12,7 @@ const startAppMsg = `
 `;
 console.log(startAppMsg);
 electron_1.app.whenReady().then(async () => {
+    //getPath(name: 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps')
     console.log(`*** app:ready: __dirname: ${__dirname}`);
     console.log(`*** app:ready: __filename: ${__filename}`);
     // __dirname: C:\Users\Alfredas\ets\win
@@ -29,6 +30,7 @@ electron_1.app.whenReady().then(async () => {
             webPreferences: {
                 // DEFAULT: contextIsolation: true
                 nodeIntegration: true,
+                nodeIntegrationInSubFrames: true,
                 preload: preloadJsPath,
                 zoomFactor: 1.50
             },
@@ -74,7 +76,7 @@ electron_1.app.whenReady().then(async () => {
         }, 500);
         setTimeout(() => { clearInterval(intervalId); }, 10000);
     }
-    const menu = electron_1.Menu.buildFromTemplate([
+    const template = [
         {
             label: "Counter",
             submenu: [
@@ -103,8 +105,64 @@ electron_1.app.whenReady().then(async () => {
                     label: '==> Open Dev Tools',
                 }
             ]
+        },
+        // { role: 'fileMenu' }
+        {
+            label: 'File',
+            submenu: [
+                { role: 'quit' }
+            ]
+        },
+        // { role: 'editMenu' }
+        {
+            label: 'Edit',
+            submenu: [
+                { role: 'undo' },
+                { role: 'redo' },
+                { type: 'separator' },
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' },
+            ]
+        },
+        // { role: 'viewMenu' }
+        {
+            label: 'View',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forceReload' },
+                { role: 'toggleDevTools' },
+                { type: 'separator' },
+                { role: 'resetZoom' },
+                { role: 'zoomIn' },
+                { role: 'zoomOut' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' }
+            ]
+        },
+        // { role: 'windowMenu' }
+        {
+            label: 'Window',
+            submenu: [
+                { role: 'minimize' },
+                { role: 'zoom' },
+                { role: 'close' }
+            ]
+        },
+        {
+            role: 'help',
+            submenu: [
+                {
+                    label: 'Learn More',
+                    click: async () => {
+                        const { shell } = require('electron');
+                        await shell.openExternal('https://electronjs.org');
+                    }
+                }
+            ]
         }
-    ]);
+    ];
+    const menu = electron_1.Menu.buildFromTemplate(template);
     electron_1.Menu.setApplicationMenu(menu);
     electron_1.ipcMain.on('set-title', (ev, ...args) => {
         //console.log("Electron.IpcMainEvent.type:", ev.type, "ev:", ev, "args:", args);
@@ -148,3 +206,23 @@ function getHandler(browserWindow) {
     }
     return handleFileOpen;
 }
+// In this file you can include the rest of your app"s specific main process code.
+// You can also put them in separate files and require them here.
+require("./main2.js");
+const serialport_1 = require("serialport");
+const querySerialPorts = serialport_1.SerialPort.list();
+(async () => {
+    const serialPorts = await querySerialPorts;
+    serialPorts.forEach(portInfo => {
+        console.log("serialPort:", portInfo);
+        const serialPort = new serialport_1.SerialPort({ path: 'COM1', baudRate: 9600 });
+        //serialPort.write('ROBOT POWER ON');
+        serialPort.open((err) => {
+            if (err) {
+                console.error("Error:", err);
+            }
+        });
+        const res = serialPort.read(10);
+        console.log("res:", res);
+    });
+})();
