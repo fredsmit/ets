@@ -18,6 +18,7 @@ console.log("==> start preload:", window.location);
 //console.log(`==> start preload: app.getAppPath: ${app.getAppPath()}`);
 console.log("==> start preload:", __dirname);
 console.log("==> start preload:", __filename);
+console.log("window.isSecureContext:", window.isSecureContext);
 const preloadingLocation = window.location;
 const allowPreload = preloadingLocation.origin === "file://";
 const startPreloadMsg = `==> Start preload: ${Date.now()}`;

@@ -210,19 +210,43 @@ function getHandler(browserWindow) {
 // You can also put them in separate files and require them here.
 require("./main2.js");
 const serialport_1 = require("serialport");
+const binding_mock_1 = require("@serialport/binding-mock");
+const stream_1 = require("@serialport/stream");
+const parser_readline_1 = require("@serialport/parser-readline");
+//MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
+const port = new stream_1.SerialPortStream({ binding: binding_mock_1.MockBinding, path: '/dev/ROBOT', baudRate: 14400 });
 const querySerialPorts = serialport_1.SerialPort.list();
 (async () => {
-    const serialPorts = await querySerialPorts;
-    serialPorts.forEach(portInfo => {
-        console.log("serialPort:", portInfo);
-        const serialPort = new serialport_1.SerialPort({ path: 'COM1', baudRate: 9600 });
-        //serialPort.write('ROBOT POWER ON');
-        serialPort.open((err) => {
-            if (err) {
-                console.error("Error:", err);
-            }
-        });
-        const res = serialPort.read(10);
-        console.log("res:", res);
+    // const serialPorts = await querySerialPorts;
+    // serialPorts.forEach(portInfo => {
+    //   console.log("serialPort:", portInfo);
+    // });
+    const parser = new parser_readline_1.ReadlineParser();
+    port.pipe(parser).on('data', line => {
+        console.log(line.toUpperCase());
     });
+    port.on('open', () => {
+        console.log("open");
+        console.log("serialPort.isOpen:", port.isOpen, "port:", port.port, "settings:", port.settings);
+        // ...then test by simulating incoming data
+        port.emit('data', "Hello, world!\n");
+    });
+    setInterval(() => {
+        const text = 'ROBOT POWER ON';
+        port.emit('data', `text: ${Date.now()}\n`);
+        port.write(`2text: ${Date.now()}\n`);
+    }, 1000);
+    // const serialPort = new SerialPort({
+    //   path: '/dev/ROBOT',
+    //   baudRate: 9600,
+    // }, (err: Error | null) => {
+    //   if (err) {
+    //     console.error("Error:", err);
+    //   } else {
+    //     console.log("serialPort.isOpen:", serialPort.isOpen, "port:", serialPort.port, "settings:", serialPort.settings);
+    //     console.log(serialPort.eventNames());
+    //     const res = serialPort.read(10);
+    //     console.log("res:", res);
+    //   }
+    // });
 })();

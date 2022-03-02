@@ -22,6 +22,7 @@ console.log("==> start preload:", window.location);
 
 console.log("==> start preload:", __dirname);
 console.log("==> start preload:", __filename);
+console.log("window.isSecureContext:", window.isSecureContext);
 const preloadingLocation = window.location;
 const allowPreload = preloadingLocation.origin === "file://";
 

@@ -260,28 +260,54 @@ import "./main2.js";
 
 import { SerialPort } from "serialport";
 import type { PortInfo } from '@serialport/bindings-cpp';
+import { MockBinding, MockBindingInterface } from "@serialport/binding-mock";
+import { SerialPortStream } from '@serialport/stream';
+import { ReadlineParser } from '@serialport/parser-readline';
+
+//MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
+const port: SerialPortStream<MockBindingInterface> = new SerialPortStream({ binding: MockBinding, path: '/dev/ROBOT', baudRate: 14400 })
 
 const querySerialPorts: Promise<PortInfo[]> = SerialPort.list();
 (async () => {
-  const serialPorts = await querySerialPorts;
-  serialPorts.forEach(portInfo => {
-    console.log("serialPort:", portInfo);
-    const serialPort = new SerialPort({
-      path: 'COM1',
-      baudRate: 9600,
-    }
-    )
-    //serialPort.write('ROBOT POWER ON');
-    serialPort.open((err: Error | null) => {
-      if (err) {
-        console.error("Error:", err);
-      }
-    });
-    const res = serialPort.read(10);
-    console.log("res:", res);
+  // const serialPorts = await querySerialPorts;
+  // serialPorts.forEach(portInfo => {
+  //   console.log("serialPort:", portInfo);
+  // });
 
-
+  const parser = new ReadlineParser();
+  port.pipe(parser).on('data', line => {
+    console.log(line.toUpperCase())
   });
+
+  port.on('open', () => {
+    console.log("open");
+    console.log("serialPort.isOpen:", port.isOpen, "port:", port.port, "settings:", port.settings);
+
+    // ...then test by simulating incoming data
+    port.emit('data', "Hello, world!\n");
+  });
+
+  setInterval(() => {
+    const text = 'ROBOT POWER ON';
+    port.emit('data', `text: ${Date.now()}\n`);
+    port.write(`2text: ${Date.now()}\n`);
+  }, 1000);
+
+  // const serialPort = new SerialPort({
+  //   path: '/dev/ROBOT',
+  //   baudRate: 9600,
+  // }, (err: Error | null) => {
+  //   if (err) {
+  //     console.error("Error:", err);
+  //   } else {
+  //     console.log("serialPort.isOpen:", serialPort.isOpen, "port:", serialPort.port, "settings:", serialPort.settings);
+  //     console.log(serialPort.eventNames());
+
+  //     const res = serialPort.read(10);
+  //     console.log("res:", res);
+  //   }
+  // });
+
 
 })();
 
