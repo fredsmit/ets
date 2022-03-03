@@ -14,6 +14,7 @@ export type ElectronApi = {
     openFile: (...args: unknown[]) => Promise<string | null>;
     onUpdateCounter: (listener: (ev: IpcRendererEvent, ...args: unknown[]) => void) => void;
     showContextMenu: (...args: unknown[]) => void;
+    getWeather: () => readonly [string, string][];
 }
 
 export type ElectronMainWorldApi = MainWorldApi<"electronApi", ElectronApi>;

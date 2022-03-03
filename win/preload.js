@@ -60,6 +60,26 @@ function showContextMenu(...args) {
     console.log("showContextMenu:", args);
     electron_1.ipcRenderer.send('show-context-menu', args);
 }
+function getWeather() {
+    return [
+        [
+            'sunny',
+            'It is nice and sunny outside today. Wear shorts! Go to the beach, or the park, and get an ice cream.'
+        ],
+        [
+            'rainy',
+            'Rain is falling outside; take a rain coat and an umbrella, and don\'t stay out for too long.'
+        ],
+        [
+            'snowing',
+            'The snow is coming down — it is freezing! Best to stay in with a cup of hot chocolate, or go build a snowman.'
+        ],
+        [
+            'overcast',
+            'It isn\'t raining, but the sky is grey and gloomy; it could turn any minute, so take a rain coat just in case.'
+        ]
+    ];
+}
 const electronMainWorldApi = {
     apiKey: "electronApi",
     api: {
@@ -70,7 +90,8 @@ const electronMainWorldApi = {
         openFile: (...args) => electron_1.ipcRenderer.invoke('dialog:openFile', ...args),
         onUpdateCounter: (listener) => {
             electron_1.ipcRenderer.on('update-counter', listener);
-        }
+        },
+        getWeather
     }
 };
 exposeInMainWorld(electronMainWorldApi);

@@ -37,7 +37,7 @@ function queryElements(parentNode, tagName, attributeSelector) {
 function queryElement(parentNode, tagName, idSelector) {
     return parentNode.querySelector(`${tagName}#${idSelector}`);
 }
-function queryRequiredElement(parentNode, tagName, idSelector) {
+function queryRequiredElement(tagName, idSelector, parentNode = document.body) {
     const selector = `${tagName}#${idSelector}`;
     const htmlElement = parentNode.querySelector(selector);
     if (htmlElement === null)

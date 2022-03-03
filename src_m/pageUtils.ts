@@ -55,9 +55,20 @@ function queryElement<TagName extends keyof HTMLElementTagNameMap>(
 }
 
 function queryRequiredElement<TagName extends keyof HTMLElementTagNameMap>(
-    parentNode: ParentNode,
     tagName: TagName,
     idSelector: string
+): HTMLElementTagNameMap[TagName];
+
+function queryRequiredElement<TagName extends keyof HTMLElementTagNameMap>(
+    tagName: TagName,
+    idSelector: string,
+    parentNode: ParentNode
+): HTMLElementTagNameMap[TagName];
+
+function queryRequiredElement<TagName extends keyof HTMLElementTagNameMap>(
+    tagName: TagName,
+    idSelector: string,
+    parentNode: ParentNode = document.body
 ): HTMLElementTagNameMap[TagName] {
     const selector = `${tagName}#${idSelector}`;
     const htmlElement = parentNode.querySelector<HTMLElementTagNameMap[TagName]>(selector)

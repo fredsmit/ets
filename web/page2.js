@@ -2,7 +2,7 @@ const electronWindow = window;
 const electronApi = electronWindow.electronApi;
 import { getRequiredHTMLElements, queryRequiredElement } from "./pageUtils.js";
 const { dv1 } = getRequiredHTMLElements("dv1");
-const btnNavigator = queryRequiredElement(document.body, "button", "btnNavigator");
+const btnNavigator = queryRequiredElement("button", "btnNavigator");
 dv1.addEventListener("contextmenu", function (ev) {
     ev.preventDefault();
     console.log(this.innerText);

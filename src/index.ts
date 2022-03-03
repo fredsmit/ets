@@ -20,6 +20,9 @@ const startAppMsg = `
 `;
 console.log(startAppMsg);
 
+// This method can only be called before app is ready.
+app.disableHardwareAcceleration();
+
 app.whenReady().then(async (): Promise<void> => {
   //getPath(name: 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps')
 

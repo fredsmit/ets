@@ -11,6 +11,8 @@ const startAppMsg = `
 *** Start app ******************************************************************
 `;
 console.log(startAppMsg);
+// This method can only be called before app is ready.
+electron_1.app.disableHardwareAcceleration();
 electron_1.app.whenReady().then(async () => {
     //getPath(name: 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps')
     console.log(`*** app:ready: __dirname: ${__dirname}`);
