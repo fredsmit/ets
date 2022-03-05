@@ -15,9 +15,9 @@ selectTheme.addEventListener("change", function (ev) {
         ? themes.white
         : themes.black;
     // assign<T, U>(target: T, source: U): T & U;
-    //const o1 = Object.assign(currentTheme, selectedSchene);
+    const o1 = Object.assign(currentTheme, selectedSchene);
     const o2 = { ...currentTheme, ...selectedSchene };
-    //console.log("o1:", o1);
+    console.log("o1:", o1);
     console.log("o2:", o2);
     updateColors();
 });
